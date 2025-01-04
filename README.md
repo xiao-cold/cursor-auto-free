@@ -48,6 +48,11 @@ macOS:   build.mac.command
 Linux:   build.sh
 ```
 
+### .env文件中配置Chrome路径
+```bash
+CHROME_PATH=
+```
+
 ## 📱 运行方法
 
 ### macOS
@@ -136,6 +141,11 @@ https://github.com/chengazhen/cursor-auto-free/releases
 Windows: build.bat
 macOS:   build.mac.command
 Linux:   build.sh
+```
+
+### .env file configuration
+```bash
+CHROME_PATH=
 ```
 
 ## 📱 Running Instructions
