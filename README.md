@@ -55,6 +55,12 @@ CHROME_PATH=
 
 ## 📱 运行方法
 
+### 更直觀的查看進度條
+<p align="center">
+  <img src="./screen/run_2025-01-04_11-51-46.png" alt="运行步骤 1" width="400"/>
+</p>
+
+
 ### macOS
 1. 打开终端，进入应用目录
 2. 授权执行权限：

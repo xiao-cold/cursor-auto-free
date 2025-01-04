@@ -5,6 +5,7 @@ os.environ["PYINSTALLER_VERBOSE"] = "0"
 
 import time
 import random
+from tqdm import tqdm
 from cursor_auth_manager import CursorAuthManager
 import os
 import logging
@@ -23,43 +24,49 @@ logging.basicConfig(
 )
 
 
+def show_progress(message, seconds):
+    """显示进度条"""
+    with tqdm(total=100, desc=message, ncols=100) as pbar:
+        for _ in range(seconds):
+            time.sleep(1)
+            pbar.update(100/seconds)
+
+
 def handle_turnstile(tab):
-    print("开始突破难关")
+    print("\n🔄 开始验证...")
     try:
-        while True:
-            try:
-                challengeCheck = (
-                    tab.ele("@id=cf-turnstile", timeout=2)
-                    .child()
-                    .shadow_root.ele("tag:iframe")
-                    .ele("tag:body")
-                    .sr("tag:input")
-                )
+        with tqdm(total=100, desc="验证进行中", ncols=100) as pbar:
+            for i in range(30):
+                try:
+                    challengeCheck = (
+                        tab.ele("@id=cf-turnstile", timeout=2)
+                        .child()
+                        .shadow_root.ele("tag:iframe")
+                        .ele("tag:body")
+                        .sr("tag:input")
+                    )
 
-                if challengeCheck:
-                    print("开始突破")
-                    time.sleep(random.uniform(1, 3))
-                    challengeCheck.click()
-                    time.sleep(2)
-                    print("突破成功")
-                    return True
-            except:
-                pass
+                    if challengeCheck:
+                        print("✨ 开始突破")
+                        time.sleep(random.uniform(1, 3))
+                        challengeCheck.click()
+                        pbar.update(100 - pbar.n)  # 更新到100%
+                        time.sleep(2)
+                        print("✅ 突破成功")
+                        return True
+                except:
+                    pass
 
-            if tab.ele("@name=password"):
-                print("突破成功")
-                break
-            if tab.ele("@data-index=0"):
-                print("突破成功")
-                break
-            if tab.ele("Account Settings"):
-                print("突破成功")
-                break
+                if any(tab.ele(selector) for selector in ["@name=password", "@data-index=0", "Account Settings"]):
+                    pbar.update(100 - pbar.n)  # 更新到100%
+                    print("✅ 验证通过")
+                    break
 
-            time.sleep(random.uniform(1, 2))
+                time.sleep(0.5)
+                pbar.update(100/30)  # 每次更新大约3.33%
+            
     except Exception as e:
-        print(e)
-        print("突破失败")
+        print(f"❌ 验证失败: {str(e)}")
         return False
 
 
@@ -230,13 +237,17 @@ class EmailGenerator:
 
 if __name__ == "__main__":
     print_logo()
+    print("\n" + "="*50)
     browser_manager = None
+    
     try:
-        # 初始化浏览器
+        print("\n🚀 初始化程序...")
+        show_progress("初始化浏览器", 3)
+        
         browser_manager = BrowserManager()
         browser = browser_manager.init_browser()
-
-        # 初始化邮箱验证处理器
+        
+        show_progress("配置验证环境", 2)
         email_handler = EmailVerificationHandler(browser)
 
         # 固定的 URL 配置
@@ -252,28 +263,26 @@ if __name__ == "__main__":
         first_name = email_generator.default_first_name
         last_name = email_generator.default_last_name
 
-        auto_update_cursor_auth = True
-
+        print(f"\n📧 使用邮箱: {account}")
+        
         tab = browser.latest_tab
         tab.run_js("try { turnstile.reset() } catch(e) { }")
-
         tab.get(login_url)
 
         if sign_up_account(browser, tab):
+            show_progress("完成注册", 2)
             token = get_cursor_session_token(tab)
             if token:
-                update_cursor_auth(
-                    email=account, access_token=token, refresh_token=token
-                )
+                update_cursor_auth(email=account, access_token=token, refresh_token=token)
+                print("\n✅ 账号注册成功！")
             else:
-                print("账户注册失败")
+                print("\n❌ 账户注册失败")
 
-        print("执行完毕")
+        print("\n🎉 执行完毕!")
+        print("="*50 + "\n")
 
     except Exception as e:
-        logging.error(f"程序执行出错: {str(e)}")
-        import traceback
-
+        print(f"\n❌ 程序执行出错: {str(e)}")
         logging.error(traceback.format_exc())
     finally:
         if browser_manager:
