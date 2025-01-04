@@ -58,6 +58,7 @@ CHROME_PATH=
 ### 更直觀的查看進度條
 <p align="center">
   <img src="./screen/run_2025-01-04_11-51-46.png" alt="运行步骤 1" width="600"/>
+  <img src="./screen/run_2025-01-04_14-02-45.png" alt="运行步骤 2" width="600"/>
 </p>
 
 
