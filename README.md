@@ -37,8 +37,8 @@ https://github.com/chengazhen/cursor-auto-free/releases
 ### Win / Mac / Linux 通用
 
 <p align="center">
-  <img src="./screen/build_2025-01-04_11-02-45.png" alt="构建步骤 1"/>
-  <img src="./screen/build_2025-01-04_11-04-43.png" alt="构建步骤 2"/>
+  <img src="./screen/build_2025-01-04_11-02-45.png" alt="构建步骤 1" width="400"/>
+  <img src="./screen/build_2025-01-04_11-04-43.png" alt="构建步骤 2" width="600"/>
 </p>
 
 ```bash
@@ -65,7 +65,7 @@ chmod +x ./CursorPro
 > 💡 如遇到启动问题，请参考[解决方案](https://sysin.org/blog/macos-if-crashes-when-opening/)
 
 <p align="center">
-  <img src="./screen/c29ea438-ee74-4ba1-bbf6-25e622cdfad5.png" alt="macOS 错误示例"/>
+  <img src="./screen/c29ea438-ee74-4ba1-bbf6-25e622cdfad5.png" alt="macOS 错误示例" width="350"/>
 </p>
 
 ### Windows
@@ -75,7 +75,7 @@ chmod +x ./CursorPro
 运行脚本完成后，重启编辑器，确认账号信息与脚本输出日志一致：
 
 <p align="center">
-  <img src="./screen/截屏2025-01-04 09.44.48.png" alt="验证成功示例"/>
+  <img src="./screen/截屏2025-01-04 09.44.48.png" alt="验证成功示例" width="350"/>
 </p>
 
 ## 📝 使用注意事项
@@ -127,8 +127,8 @@ https://github.com/chengazhen/cursor-auto-free/releases
 ### For Win / Mac / Linux
 
 <p align="center">
-  <img src="./screen/build_2025-01-04_11-02-45.png" alt="Build Step 1"/>
-  <img src="./screen/build_2025-01-04_11-04-43.png" alt="Build Step 2"/>
+  <img src="./screen/build_2025-01-04_11-02-45.png" alt="Build Step 1" width="400"/>
+  <img src="./screen/build_2025-01-04_11-04-43.png" alt="Build Step 2" width="600"/>
 </p>
 
 ```bash
@@ -155,7 +155,7 @@ Or double-click in Finder to run
 > 💡 If you encounter startup issues, check the [Solution Guide](https://sysin.org/blog/macos-if-crashes-when-opening/)
 
 <p align="center">
-  <img src="./screen/c29ea438-ee74-4ba1-bbf6-25e622cdfad5.png" alt="macOS Error Example"/>
+  <img src="./screen/c29ea438-ee74-4ba1-bbf6-25e622cdfad5.png" alt="macOS Error Example" width="350"/>
 </p>
 
 ### Windows
@@ -165,7 +165,7 @@ Double-click `CursorPro.exe` to run
 After running the script, restart your editor and verify that the account information matches the script output log:
 
 <p align="center">
-  <img src="./screen/截屏2025-01-04 09.44.48.png" alt="Verification Success Example"/>
+  <img src="./screen/截屏2025-01-04 09.44.48.png" alt="Verification Success Example" width="350"/>
 </p>
 
 ## 📝 Usage Notes
