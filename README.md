@@ -21,6 +21,10 @@ https://github.com/chengazhen/cursor-auto-free/releases
 ![image](./screen/build_2025-01-04_11-02-45.png)
 直接使用 `build.bat` 或者 `build.sh` 或者 `build.mac.command` 构建即可。
 
+## 构建使用
+### Win / Mac / Linux 通用
+![image](./screen/build_2025-01-04_11-02-45.png)
+![image](./screen/build_2025-01-04_11-02-45.png)
 
 ## 运行方法
 
