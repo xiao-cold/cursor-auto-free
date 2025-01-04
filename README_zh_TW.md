@@ -3,7 +3,7 @@
 [简体中文](README.md) | [繁體中文](README_zh_TW.md) | [English](README_en.md)
 
 <p align="center">
-  <img src="./assets/logo.png" alt="Cursor Pro Logo" width="200"/>
+  <img src="./screen/logo.png" alt="Cursor Pro Logo" width="200"/>
 </p>
 
 ## 🚀 功能介紹
