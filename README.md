@@ -13,6 +13,17 @@
 
 </div>
 
+## 🔄 更新日志
+<details>
+<summary>v0.0.6</summary>
+1. 修复了无法获取邮箱验证码的问题
+2. 增加了机器ID重置功能
+3. 增加了进度条显示
+<p align="center">
+  <img src="./screen/run_2025-01-05_00-13-04.png" alt="ID" width="600"/>
+  </p>
+</details>
+
 ## 中文
 
 ## 🚀 功能介绍
