@@ -1,12 +1,27 @@
 import os
+from colorama import Fore, Style, init
+
+# 初始化colorama
+init()
+
+# 定义emoji和颜色常量
+EMOJI = {
+    'START': '🚀',
+    'FORM': '📝',
+    'VERIFY': '🔄',
+    'PASSWORD': '🔑',
+    'CODE': '📱',
+    'DONE': '✨',
+    'ERROR': '❌',
+    'WAIT': '⏳',
+    'SUCCESS': '✅'
+}
 
 os.environ["PYTHONVERBOSE"] = "0"
 os.environ["PYINSTALLER_VERBOSE"] = "0"
 
 import time
 import random
-import traceback
-from tqdm import tqdm
 from cursor_auth_manager import CursorAuthManager
 import os
 import logging
@@ -25,49 +40,52 @@ logging.basicConfig(
 )
 
 
-def show_progress(message, seconds):
-    """显示进度条"""
-    with tqdm(total=100, desc=message, ncols=100) as pbar:
-        for _ in range(seconds):
-            time.sleep(1)
-            pbar.update(100/seconds)
+def show_progress(progress, total, prefix='Progress:', suffix='Complete', length=50):
+    filled_length = int(length * progress / total)
+    bar = Fore.GREEN + '█' * filled_length + Fore.WHITE + '░' * (length - filled_length)
+    percent = f"{100.0 * progress / total:.1f}"
+    print(f'\r{Fore.CYAN}{prefix} |{bar}| {Fore.YELLOW}{percent}%{Fore.BLUE} {suffix}{Style.RESET_ALL}', end='', flush=True)
+    if progress == total:
+        print()
 
 
 def handle_turnstile(tab):
-    print("\n🔄 开始验证...")
+    print("开始突破难关")
     try:
-        with tqdm(total=100, desc="验证进行中", ncols=100) as pbar:
-            for i in range(30):
-                try:
-                    challengeCheck = (
-                        tab.ele("@id=cf-turnstile", timeout=2)
-                        .child()
-                        .shadow_root.ele("tag:iframe")
-                        .ele("tag:body")
-                        .sr("tag:input")
-                    )
+        while True:
+            try:
+                challengeCheck = (
+                    tab.ele("@id=cf-turnstile", timeout=2)
+                    .child()
+                    .shadow_root.ele("tag:iframe")
+                    .ele("tag:body")
+                    .sr("tag:input")
+                )
 
-                    if challengeCheck:
-                        print("✨ 开始突破")
-                        time.sleep(random.uniform(1, 3))
-                        challengeCheck.click()
-                        pbar.update(100 - pbar.n)  # 更新到100%
-                        time.sleep(2)
-                        print("✅ 突破成功")
-                        return True
-                except:
-                    pass
+                if challengeCheck:
+                    print("开始突破")
+                    time.sleep(random.uniform(1, 3))
+                    challengeCheck.click()
+                    time.sleep(2)
+                    print("突破成功")
+                    return True
+            except:
+                pass
 
-                if any(tab.ele(selector) for selector in ["@name=password", "@data-index=0", "Account Settings"]):
-                    pbar.update(100 - pbar.n)  # 更新到100%
-                    print("✅ 验证通过")
-                    break
+            if tab.ele("@name=password"):
+                print("突破成功")
+                break
+            if tab.ele("@data-index=0"):
+                print("突破成功")
+                break
+            if tab.ele("Account Settings"):
+                print("突破成功")
+                break
 
-                time.sleep(0.5)
-                pbar.update(100/30)  # 每次更新大约3.33%
-            
+            time.sleep(random.uniform(1, 2))
     except Exception as e:
-        print(f"❌ 验证失败: {str(e)}")
+        print(e)
+        print("突破失败")
         return False
 
 
@@ -117,11 +135,22 @@ def update_cursor_auth(email=None, access_token=None, refresh_token=None):
 
 
 def sign_up_account(browser, tab):
-    print("开始执行...")
+    print(f"\n{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{EMOJI['START']} 开始 Cursor Pro 注册流程{Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
+    print(f"{Fore.YELLOW}[信息]{Style.RESET_ALL}")
+    print(f"{EMOJI['FORM']} 邮箱服务商: {Fore.GREEN}mailto.plus{Style.RESET_ALL}")
+    print(f"{EMOJI['FORM']} 临时邮箱地址: {Fore.GREEN}{account}{Style.RESET_ALL}")
+    print(f"{EMOJI['FORM']} 注册名称: {Fore.GREEN}{first_name} {last_name}{Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{'='*50}{Style.RESET_ALL}\n")
+    
+    total_steps = 5
+    show_progress(0, total_steps)
     tab.get(sign_up_url)
 
     try:
         if tab.ele("@name=first_name"):
+            print(f"\n{Fore.YELLOW}{EMOJI['FORM']} [1/5] 填写注册信息...{Style.RESET_ALL}")
             tab.actions.click("@name=first_name").input(first_name)
             time.sleep(random.uniform(1, 3))
 
@@ -132,31 +161,38 @@ def sign_up_account(browser, tab):
             time.sleep(random.uniform(1, 3))
 
             tab.actions.click("@type=submit")
+            show_progress(1, total_steps)
 
     except Exception as e:
-        print("打开注册页面失败")
+        print(f"\n{Fore.RED}{EMOJI['ERROR']} 打开注册页面失败{Style.RESET_ALL}")
         return False
 
+    print(f"\n{Fore.YELLOW}{EMOJI['VERIFY']} [2/5] 处理验证...{Style.RESET_ALL}")
     handle_turnstile(tab)
+    show_progress(2, total_steps)
 
     try:
         if tab.ele("@name=password"):
+            print(f"\n{Fore.YELLOW}{EMOJI['PASSWORD']} [3/5] 设置密码...{Style.RESET_ALL}")
             tab.ele("@name=password").input(password)
             time.sleep(random.uniform(1, 3))
 
             tab.ele("@type=submit").click()
-            print("请稍等...")
+            print(f"{Fore.CYAN}{EMOJI['WAIT']} 请稍等...{Style.RESET_ALL}")
+            show_progress(3, total_steps)
 
     except Exception as e:
-        print("执行失败")
+        print(f"\n{Fore.RED}{EMOJI['ERROR']} 执行失败{Style.RESET_ALL}")
         return False
 
     time.sleep(random.uniform(1, 3))
     if tab.ele("This email is not available."):
-        print("执行失败")
+        print(f"\n{Fore.RED}{EMOJI['ERROR']} 执行失败{Style.RESET_ALL}")
         return False
 
+    print(f"\n{Fore.YELLOW}{EMOJI['CODE']} [4/5] 处理验证码...{Style.RESET_ALL}")
     handle_turnstile(tab)
+    show_progress(4, total_steps)
 
     while True:
         try:
@@ -174,13 +210,17 @@ def sign_up_account(browser, tab):
                     i += 1
                 break
         except Exception as e:
-            print(e)
+            print(f"{Fore.RED}{e}{Style.RESET_ALL}")
 
+    print(f"\n{Fore.YELLOW}{EMOJI['DONE']} [5/5] 完成注册...{Style.RESET_ALL}")
     handle_turnstile(tab)
     wait_time = random.randint(3, 6)
     for i in range(wait_time):
-        print(f"等待中... {wait_time-i}秒")
+        print(f"{Fore.CYAN}{EMOJI['WAIT']} 等待中... {wait_time-i}秒{Style.RESET_ALL}")
         time.sleep(1)
+    
+    # 获取可用额度
+    total_usage = "未知"
     tab.get(settings_url)
     try:
         usage_selector = (
@@ -192,11 +232,27 @@ def sign_up_account(browser, tab):
         if usage_ele:
             usage_info = usage_ele.text
             total_usage = usage_info.split("/")[-1].strip()
-            print("可用上限: " + total_usage)
     except Exception as e:
-        print("获取可用上限失败")
-    print("注册完成")
-    account_info = f"\nCursor 账号： {account}  密码： {password}"
+        print(f"\n{Fore.RED}{EMOJI['ERROR']} 获取可用额度失败: {str(e)}{Style.RESET_ALL}")
+
+    # 显示最终信息
+    print(f"\n{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
+    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Cursor Pro 注册成功！{Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
+    print(f"{Fore.YELLOW}[账号信息]{Style.RESET_ALL}")
+    print(f"{EMOJI['SUCCESS']} 邮箱: {Fore.GREEN}{account}{Style.RESET_ALL}")
+    print(f"{EMOJI['SUCCESS']} 密码: {Fore.GREEN}{password}{Style.RESET_ALL}")
+    print(f"{EMOJI['SUCCESS']} 可用额度: {Fore.GREEN}{total_usage}{Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
+    
+    # 记录到日志
+    account_info = (
+        f"\nCursor Pro 账号信息:\n"
+        f"邮箱服务商: mailto.plus\n"
+        f"邮箱: {account}\n"
+        f"密码: {password}\n"
+        f"可用额度: {total_usage}"
+    )
     logging.info(account_info)
     time.sleep(5)
     return True
@@ -238,17 +294,13 @@ class EmailGenerator:
 
 if __name__ == "__main__":
     print_logo()
-    print("\n" + "="*50)
     browser_manager = None
-    
     try:
-        print("\n🚀 初始化程序...")
-        show_progress("初始化浏览器", 3)
-        
+        # 初始化浏览器
         browser_manager = BrowserManager()
         browser = browser_manager.init_browser()
-        
-        show_progress("配置验证环境", 2)
+
+        # 初始化邮箱验证处理器
         email_handler = EmailVerificationHandler(browser)
 
         # 固定的 URL 配置
@@ -264,26 +316,28 @@ if __name__ == "__main__":
         first_name = email_generator.default_first_name
         last_name = email_generator.default_last_name
 
-        print(f"\n📧 使用邮箱: {account}")
-        
+        auto_update_cursor_auth = True
+
         tab = browser.latest_tab
         tab.run_js("try { turnstile.reset() } catch(e) { }")
+
         tab.get(login_url)
 
         if sign_up_account(browser, tab):
-            show_progress("完成注册", 2)
             token = get_cursor_session_token(tab)
             if token:
-                update_cursor_auth(email=account, access_token=token, refresh_token=token)
-                print("\n✅ 账号注册成功！")
+                update_cursor_auth(
+                    email=account, access_token=token, refresh_token=token
+                )
             else:
-                print("\n❌ 账户注册失败")
+                print("账户注册失败")
 
-        print("\n🎉 执行完毕!")
-        print("="*50 + "\n")
+        print("执行完毕")
 
     except Exception as e:
-        print(f"\n❌ 程序执行出错: {str(e)}")
+        logging.error(f"程序执行出错: {str(e)}")
+        import traceback
+
         logging.error(traceback.format_exc())
     finally:
         if browser_manager:

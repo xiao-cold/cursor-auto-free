@@ -57,7 +57,7 @@ CHROME_PATH=
 
 ### 更直觀的查看進度條
 <p align="center">
-  <img src="./screen/run_2025-01-04_11-51-46.png" alt="运行步骤 1" width="600"/>
+  <img src="./screen/run_2025-01-04_22.png" alt="运行步骤 1" width="600"/>
   <img src="./screen/run_2025-01-04_14-02-45.png" alt="运行步骤 2" width="600"/>
 </p>
 
@@ -109,6 +109,7 @@ chmod +x ./CursorPro
 
 ## ⚖️ 免责声明
 本工具仅供学习研究使用，请遵守相关服务条款。使用本工具产生的任何后果由使用者自行承担。
+仓库核心源码来自[gpt-cursor-auto](https://github.com/hmhm2022/gpt-cursor-auto)；自行优化了验证和邮箱注册逻辑；解决了无法获取邮箱验证码的问题。
 
 ---
 
@@ -210,6 +211,7 @@ After running the script, restart your editor and verify that the account inform
 
 ## ⚖️ Disclaimer
 This tool is for learning and research purposes only. Please comply with relevant terms of service. Users assume all responsibility for any consequences of using this tool.
+Git Core Source Code: [gpt-cursor-auto](https://github.com/hmhm2022/gpt-cursor-auto)；Optimized verification and email registration logic; solved the problem of not being able to retrieve email verification codes.
 
 ---
 
