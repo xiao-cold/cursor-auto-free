@@ -5,6 +5,7 @@ os.environ["PYINSTALLER_VERBOSE"] = "0"
 
 import time
 import random
+import traceback
 from tqdm import tqdm
 from cursor_auth_manager import CursorAuthManager
 import os
