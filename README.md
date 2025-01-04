@@ -159,6 +159,7 @@ CHROME_PATH=
 ### Show Progress Bar
 <p align="center">
   <img src="./screen/run_2025-01-04_11-51-46.png" alt="Run Step 1" width="600"/>
+  <img src="./screen/run_2025-01-04_14-02-45.png" alt="Run Step 2" width="600"/>
 </p>
 
 ### macOS
