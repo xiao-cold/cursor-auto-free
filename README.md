@@ -15,6 +15,10 @@ https://github.com/chengazhen/cursor-auto-free/releases
 
 **3.有一个稳定的网络连接。尽量是国外的节点。不要开启全局代理。一定不要开启全局代理。**
 
+## 构建使用
+### Win / Mac / Linux 通用
+![image](./screen/build_2025-01-04_11-02-45.png)
+![image](./screen/build_2025-01-04_11-02-45.png)
 
 ## 运行方法
 
