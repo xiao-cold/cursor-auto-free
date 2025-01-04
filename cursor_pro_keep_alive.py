@@ -14,7 +14,8 @@ EMOJI = {
     'DONE': '✨',
     'ERROR': '❌',
     'WAIT': '⏳',
-    'SUCCESS': '✅'
+    'SUCCESS': '✅',
+    'MAIL': '📧'
 }
 
 os.environ["PYTHONVERBOSE"] = "0"
@@ -30,6 +31,17 @@ from get_email_code import EmailVerificationHandler
 from logo import print_logo
 
 # 在文件开头设置日志
+class ColoredFormatter(logging.Formatter):
+    """自定义彩色日志格式器"""
+    
+    def format(self, record):
+        if record.levelno == logging.INFO:
+            record.msg = f"{Fore.CYAN}{record.msg}{Style.RESET_ALL}"
+        elif record.levelno == logging.ERROR:
+            record.msg = f"{Fore.RED}{EMOJI['ERROR']} {record.msg}{Style.RESET_ALL}"
+        return super().format(record)
+
+# 修改日志配置
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -38,6 +50,11 @@ logging.basicConfig(
         logging.FileHandler("cursor_keep_alive.log", encoding="utf-8"),
     ],
 )
+
+# 为控制台处理器设置彩色格式器
+for handler in logging.getLogger().handlers:
+    if isinstance(handler, logging.StreamHandler):
+        handler.setFormatter(ColoredFormatter("%(asctime)s - %(levelname)s - %(message)s"))
 
 
 def show_progress(progress, total, prefix='Progress:', suffix='Complete', length=50):
@@ -50,7 +67,7 @@ def show_progress(progress, total, prefix='Progress:', suffix='Complete', length
 
 
 def handle_turnstile(tab):
-    print("开始突破难关")
+    print(f"{Fore.CYAN}{EMOJI['VERIFY']} 开始突破 Turnstile 验证{Style.RESET_ALL}")
     try:
         while True:
             try:
@@ -63,29 +80,28 @@ def handle_turnstile(tab):
                 )
 
                 if challengeCheck:
-                    print("开始突破")
+                    print(f"{Fore.YELLOW}{EMOJI['WAIT']} 检测到验证请求，开始处理...{Style.RESET_ALL}")
                     time.sleep(random.uniform(1, 3))
                     challengeCheck.click()
                     time.sleep(2)
-                    print("突破成功")
+                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} 验证突破成功！{Style.RESET_ALL}")
                     return True
             except:
                 pass
 
             if tab.ele("@name=password"):
-                print("突破成功")
+                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} 验证通过{Style.RESET_ALL}")
                 break
             if tab.ele("@data-index=0"):
-                print("突破成功")
+                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} 验证通过{Style.RESET_ALL}")
                 break
             if tab.ele("Account Settings"):
-                print("突破成功")
+                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} 验证通过{Style.RESET_ALL}")
                 break
 
             time.sleep(random.uniform(1, 2))
     except Exception as e:
-        print(e)
-        print("突破失败")
+        print(f"{Fore.RED}{EMOJI['ERROR']} 验证失败: {str(e)}{Style.RESET_ALL}")
         return False
 
 
@@ -97,7 +113,7 @@ def get_cursor_session_token(tab, max_attempts=3, retry_interval=2):
     :param retry_interval: 重试间隔(秒)
     :return: session token 或 None
     """
-    print("开始获取cookie")
+    print(f"{Fore.CYAN}{EMOJI['WAIT']} 开始获取 Cursor Session Token...{Style.RESET_ALL}")
     attempts = 0
 
     while attempts < max_attempts:
@@ -105,22 +121,23 @@ def get_cursor_session_token(tab, max_attempts=3, retry_interval=2):
             cookies = tab.cookies()
             for cookie in cookies:
                 if cookie.get("name") == "WorkosCursorSessionToken":
+                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Token 获取成功{Style.RESET_ALL}")
                     return cookie["value"].split("%3A%3A")[1]
 
             attempts += 1
             if attempts < max_attempts:
                 print(
-                    f"第 {attempts} 次尝试未获取到CursorSessionToken，{retry_interval}秒后重试..."
+                    f"{Fore.YELLOW}{EMOJI['WAIT']} 第 {attempts} 次尝试未获取到 Token，{retry_interval}秒后重试...{Style.RESET_ALL}"
                 )
                 time.sleep(retry_interval)
             else:
-                print(f"已达到最大尝试次数({max_attempts})，获取CursorSessionToken失败")
+                print(f"{Fore.RED}{EMOJI['ERROR']} 已达到最大尝试次数({max_attempts})，获取 Token 失败{Style.RESET_ALL}")
 
         except Exception as e:
-            print(f"获取cookie失败: {str(e)}")
+            print(f"{Fore.RED}{EMOJI['ERROR']} 获取 Token 失败: {str(e)}{Style.RESET_ALL}")
             attempts += 1
             if attempts < max_attempts:
-                print(f"将在 {retry_interval} 秒后重试...")
+                print(f"{Fore.YELLOW}{EMOJI['WAIT']} 将在 {retry_interval} 秒后重试...{Style.RESET_ALL}")
                 time.sleep(retry_interval)
 
     return None
@@ -130,8 +147,22 @@ def update_cursor_auth(email=None, access_token=None, refresh_token=None):
     """
     更新Cursor的认证信息的便捷函数
     """
+    print(f"\n{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
+    print(f"{Fore.YELLOW}{EMOJI['WAIT']} 正在更新 Cursor 认证信息...{Style.RESET_ALL}")
+    
     auth_manager = CursorAuthManager()
-    return auth_manager.update_auth(email, access_token, refresh_token)
+    result = auth_manager.update_auth(email, access_token, refresh_token)
+    
+    if result:
+        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} 邮箱信息更新成功{Style.RESET_ALL}")
+        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Access Token 更新成功{Style.RESET_ALL}")
+        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Refresh Token 更新成功{Style.RESET_ALL}")
+        print(f"{Fore.GREEN}{EMOJI['DONE']} 认证信息更新完成{Style.RESET_ALL}")
+    else:
+        print(f"{Fore.RED}{EMOJI['ERROR']} 认证信息更新失败{Style.RESET_ALL}")
+    
+    print(f"{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
+    return result
 
 
 def sign_up_account(browser, tab):
@@ -247,11 +278,14 @@ def sign_up_account(browser, tab):
     
     # 记录到日志
     account_info = (
-        f"\nCursor Pro 账号信息:\n"
-        f"邮箱服务商: mailto.plus\n"
-        f"邮箱: {account}\n"
-        f"密码: {password}\n"
-        f"可用额度: {total_usage}"
+        f"\n{Fore.CYAN}{'='*50}{Style.RESET_ALL}\n"
+        f"{Fore.CYAN}Cursor Pro 账号信息{Style.RESET_ALL}\n"
+        f"{Fore.CYAN}{'='*50}{Style.RESET_ALL}\n"
+        f"{EMOJI['FORM']} 邮箱服务商: {Fore.GREEN}mailto.plus{Style.RESET_ALL}\n"
+        f"{EMOJI['MAIL']} 邮箱: {Fore.GREEN}{account}{Style.RESET_ALL}\n"
+        f"{EMOJI['PASSWORD']} 密码: {Fore.GREEN}{password}{Style.RESET_ALL}\n"
+        f"{EMOJI['SUCCESS']} 可用额度: {Fore.GREEN}{total_usage}{Style.RESET_ALL}\n"
+        f"{Fore.CYAN}{'='*50}{Style.RESET_ALL}"
     )
     logging.info(account_info)
     time.sleep(5)
@@ -330,16 +364,15 @@ if __name__ == "__main__":
                     email=account, access_token=token, refresh_token=token
                 )
             else:
-                print("账户注册失败")
+                print(f"{Fore.RED}{EMOJI['ERROR']} 账户注册失败{Style.RESET_ALL}")
 
-        print("执行完毕")
+        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} 所有操作执行完毕{Style.RESET_ALL}")
 
     except Exception as e:
         logging.error(f"程序执行出错: {str(e)}")
         import traceback
-
         logging.error(traceback.format_exc())
     finally:
         if browser_manager:
             browser_manager.quit()
-        input("\n按回车键退出...")
+        input(f"\n{Fore.CYAN}{EMOJI['WAIT']} 按回车键退出...{Style.RESET_ALL}")

@@ -9,7 +9,7 @@ CURSOR_LOGO = """
 
 
 def print_logo():
-    print(CURSOR_LOGO)
+    print("\033[96m" + CURSOR_LOGO + "\033[0m")
 
 
 if __name__ == "__main__":

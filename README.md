@@ -57,9 +57,16 @@ CHROME_PATH=
 
 ### 更直觀的查看進度條
 <p align="center">
-  <img src="./screen/run_2025-01-04_22.png" alt="运行步骤 1" width="600"/>
-  <img src="./screen/run_2025-01-04_14-02-45.png" alt="运行步骤 2" width="600"/>
+  <img src="./screen/run_2025-01-04_23-26-22.gif" alt="Run Step 1" width="600"/>
 </p>
+<details>
+<summary>進度條</summary>
+<p align="center">
+  <img src="./screen/run_2025-01-04_23-26-57.png" alt="Run Step 2" width="600"/>
+  <img src="./screen/run_2025-01-04_23-28-29.png" alt="Run Step 3" width="600"/>
+  <img src="./screen/run_2025-01-04_23-28-08.png" alt="Run Step 4" width="600"/>
+  </p>
+</details>
 
 
 ### macOS
@@ -140,6 +147,7 @@ https://github.com/chengazhen/cursor-auto-free/releases
 ### For Win / Mac / Linux
 
 <p align="center">
+
   <img src="./screen/build_2025-01-04_11-02-45.png" alt="Build Step 1" width="400"/>
   <img src="./screen/build_2025-01-04_11-04-43.png" alt="Build Step 2" width="600"/>
 </p>
@@ -160,9 +168,16 @@ CHROME_PATH=
 
 ### Show Progress Bar
 <p align="center">
-  <img src="./screen/run_2025-01-04_11-51-46.png" alt="Run Step 1" width="600"/>
-  <img src="./screen/run_2025-01-04_14-02-45.png" alt="Run Step 2" width="600"/>
+  <img src="./screen/run_2025-01-04_23-26-22.gif" alt="Run Step 1" width="600"/>
 </p>
+<details>
+<summary>Progress</summary>
+<p align="center">
+  <img src="./screen/run_2025-01-04_23-26-57.png" alt="Run Step 2" width="600"/>
+  <img src="./screen/run_2025-01-04_23-28-29.png" alt="Run Step 3" width="600"/>
+  <img src="./screen/run_2025-01-04_23-28-08.png" alt="Run Step 4" width="600"/>
+  </p>
+</details>
 
 ### macOS
 1. Open terminal and navigate to application directory
