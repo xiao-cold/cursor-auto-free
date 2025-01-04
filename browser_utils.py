@@ -2,7 +2,10 @@ from DrissionPage import ChromiumOptions, Chromium
 import sys
 import os
 import logging
+from dotenv import load_dotenv
 
+# 加载.env文件
+load_dotenv()
 
 class BrowserManager:
     def __init__(self):
@@ -11,6 +14,13 @@ class BrowserManager:
     def init_browser(self):
         """初始化浏览器"""
         co = self._get_browser_options()
+        
+        # 从.env获取Chrome路径
+        chrome_path = os.getenv('CHROME_PATH')
+        if chrome_path and os.path.exists(chrome_path):
+            co.set_browser_path(chrome_path)
+            logging.info(f"Using Chrome from: {chrome_path}")
+        
         self.browser = Chromium(co)
         return self.browser
 
