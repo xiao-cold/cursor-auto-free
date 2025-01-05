@@ -29,7 +29,6 @@ import logging
 from browser_utils import BrowserManager
 from get_email_code import EmailVerificationHandler
 from logo import print_logo
-from reset_machine import MachineIDResetter
 
 
 # 在文件开头设置日志
